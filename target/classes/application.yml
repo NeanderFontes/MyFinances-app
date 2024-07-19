@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/myfinances?useTimezone=true&serverTimezone=UTC
+    username: root
+    password: 753951
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: false
