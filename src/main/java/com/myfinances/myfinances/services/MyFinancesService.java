@@ -1,5 +1,7 @@
 package com.myfinances.myfinances.services;
 
+import com.myfinances.myfinances.dto.MyFinancesDTO;
+import com.myfinances.myfinances.mapper.VOMapper;
 import com.myfinances.myfinances.models.MyFinancesModel;
 import com.myfinances.myfinances.repositories.MyFinanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,28 +15,30 @@ public class MyFinancesService {
     @Autowired
     MyFinanceRepository myFinanceRepository;
 
-    public MyFinancesModel findById(Long findItemById) {
+    public MyFinancesDTO findById(Long findItemById) {
         MyFinancesModel entityModel = myFinanceRepository.findById(findItemById).orElseThrow();
-        return entityModel;
+        return VOMapper.parseObjectClassDTOToModel(entityModel, MyFinancesDTO.class);
     }
 
-    public List<MyFinancesModel> findAll() {
-        return myFinanceRepository.findAll();
+    public List<MyFinancesDTO> findAll() {
+        return VOMapper.parseListClassDTOToModel(myFinanceRepository.findAll(), MyFinancesDTO.class);
     }
 
-    public MyFinancesModel create(MyFinancesModel addNewEntityModel) {
-        MyFinancesModel addEntityModel = myFinanceRepository.save(addNewEntityModel);
-        return addEntityModel;
+    public MyFinancesDTO create(MyFinancesDTO addNewEntityDTO) {
+        MyFinancesModel entityModel = VOMapper.parseObjectClassDTOToModel(addNewEntityDTO, MyFinancesModel.class);
+        MyFinancesDTO entityDTO = VOMapper.parseObjectClassDTOToModel(myFinanceRepository.save(entityModel), MyFinancesDTO.class);
+
+        return entityDTO;
     }
 
-    public MyFinancesModel update(MyFinancesModel updateNewEntityModel) {
-        MyFinancesModel updateEntity = myFinanceRepository.findById(updateNewEntityModel.getId()).orElseThrow();
+    public MyFinancesDTO update(MyFinancesDTO updateNewEntityDTO) {
+        MyFinancesModel updateEntityModel = myFinanceRepository.findById(updateNewEntityDTO.getId()).orElseThrow();
 
-        updateEntity.setEmpresa(updateNewEntityModel.getEmpresa());
-        updateEntity.setValorDespesa(updateNewEntityModel.getValorDespesa());
-        updateEntity.setDataPagamento(updateNewEntityModel.getDataPagamento());
+        updateEntityModel.setEmpresa(updateNewEntityDTO.getEmpresa());
+        updateEntityModel.setValorDespesa(updateNewEntityDTO.getValorDespesa());
+        updateEntityModel.setDataPagamento(updateNewEntityDTO.getDataPagamento());
 
-        return myFinanceRepository.save(updateEntity);
+        return VOMapper.parseObjectClassDTOToModel(myFinanceRepository.save(updateEntityModel), MyFinancesDTO.class);
     }
 
     public ResponseEntity<?> delete(Long deleteEntityModel) {
