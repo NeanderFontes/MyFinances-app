@@ -3,6 +3,7 @@ package com.myfinances.myfinances.services;
 import com.myfinances.myfinances.models.MyFinancesModel;
 import com.myfinances.myfinances.repositories.MyFinanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,8 +37,9 @@ public class MyFinancesService {
         return myFinanceRepository.save(updateEntity);
     }
 
-    public void delete(Long deleteEntityModel) {
+    public ResponseEntity<?> delete(Long deleteEntityModel) {
         MyFinancesModel entityModel = myFinanceRepository.findById(deleteEntityModel).orElseThrow();
         myFinanceRepository.delete(entityModel);
+        return ResponseEntity.noContent().build();
     }
 }
